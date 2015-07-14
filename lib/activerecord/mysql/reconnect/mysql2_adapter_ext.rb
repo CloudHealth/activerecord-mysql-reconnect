@@ -4,7 +4,8 @@ class ActiveRecord::ConnectionAdapters::Mysql2Adapter
       :proc => proc {
         reconnect_without_retry!
       },
-      :connection => @connection
+      :connection => @connection,
+      :reconnect_callback => Activerecord::Mysql::Reconnect.reconnect_callback
     )
   end
 

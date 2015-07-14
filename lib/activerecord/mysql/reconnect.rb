@@ -109,30 +109,46 @@ module Activerecord::Mysql::Reconnect
       @activerecord_mysql_reconnect_retry_databases || []
     end
 
+    def error_callback
+      @reconnect_error_callback ||= ->(e, n, wait, conn) do
+        # conn_info = connection_info conn
+        logger.error "[ATTEMPT #{n}] MySQL server has gone away. Trying to reconnect in #{wait} seconds. (#{e.class}: #{e.message})"
+      end
+    end
+
+    def error_callback=(proc)
+      @reconnect_error_callback = proc
+    end
+
+    def reconnect_callback
+      @ar_reconnect_callback ||= -> do
+        # logger.debug 'Establishing connection to database...'
+      end
+    end
+
+    def reconnect_callback=(proc)
+      @ar_reconnect_callback = proc
+    end
+
     def retryable(opts)
       block     = opts.fetch(:proc)
       on_error  = opts[:on_error]
       conn      = opts[:connection]
+      error_callback = opts[:error_callback]
+      reconnect_callback = opts[:reconnect_callback]
       tries     = self.execution_tries
       retval    = nil
 
       retryable_loop(tries) do |n|
         begin
+          reconnect_callback.call if reconnect_callback
           retval = block.call
           break
         rescue => e
           if enable_retry and (tries.zero? or n < tries) and should_handle?(e, opts)
             on_error.call if on_error
             wait = self.execution_retry_wait * n
-
-            opt_msgs = ["cause: #{e} [#{e.class}]"]
-
-            if conn
-              conn_info = connection_info(conn)
-              opt_msgs << 'connection: ' + [:host, :database, :username].map {|k| "#{k}=#{conn_info[k]}" }.join(";")
-            end
-
-            logger.warn("MySQL server has gone away. Trying to reconnect in #{wait.to_f} seconds. (#{opt_msgs.join(', ')})")
+            error_callback.call(e, n, wait, conn) if error_callback
             sleep(wait)
             next
           else

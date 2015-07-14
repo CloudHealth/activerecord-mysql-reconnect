@@ -23,6 +23,22 @@ class ActiveRecord::Base
        Activerecord::Mysql::Reconnect.retry_databases
     end
 
+    def error_callback
+       Activerecord::Mysql::Reconnect.error_callback
+    end
+
+    def error_callback=(proc)
+      Activerecord::Mysql::Reconnect.error_callback = proc
+    end
+
+    def reconnect_callback
+       Activerecord::Mysql::Reconnect.reconnect_callback
+    end
+
+    def reconnect_callback=(proc)
+      Activerecord::Mysql::Reconnect.reconnect_callback = proc
+    end
+
     def without_retry
       Activerecord::Mysql::Reconnect.without_retry do
         yield

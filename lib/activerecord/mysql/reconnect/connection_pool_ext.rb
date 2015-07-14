@@ -5,6 +5,7 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
         new_connection_without_retry
       },
       :connection => spec.config,
+      :reconnect_callback => Activerecord::Mysql::Reconnect.reconnect_callback
     )
   end
 

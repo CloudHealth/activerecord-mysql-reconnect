@@ -4,7 +4,8 @@ class ActiveRecord::ConnectionAdapters::JdbcAdapter
       :proc => proc {
         reconnect_without_retry!
       },
-      :connection => @connection
+      :connection => @connection,
+      :reconnect_callback => Activerecord::Mysql::Reconnect.reconnect_callback
     )
   end
 
@@ -64,7 +65,8 @@ class ActiveRecord::ConnectionAdapters::JdbcAdapter
         },
         :sql => sql,
         :retry_mode => Activerecord::Mysql::Reconnect.retry_mode,
-        :connection => @connection
+        :connection => @connection,
+        :error_callback => Activerecord::Mysql::Reconnect.error_callback
     )
   end
 

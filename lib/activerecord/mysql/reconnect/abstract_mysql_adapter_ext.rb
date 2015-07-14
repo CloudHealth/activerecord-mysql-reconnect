@@ -38,7 +38,8 @@ class ActiveRecord::ConnectionAdapters::AbstractMysqlAdapter
       },
       :sql => sql,
       :retry_mode => Activerecord::Mysql::Reconnect.retry_mode,
-      :connection => @connection
+      :connection => @connection,
+      :error_callback => Activerecord::Mysql::Reconnect.error_callback
     )
   end
 
