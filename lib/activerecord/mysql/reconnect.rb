@@ -60,7 +60,8 @@ module Activerecord::Mysql::Reconnect
     'Access denied for user',
     'The MySQL server is running with the --read-only option',
     'Unknown MySQL server host', # For DNS blips
-    'Communications link failure'
+    'Communications link failure',
+    'Lost connection to MySQL server at'
   ]
 
   HANDLE_ERROR_MESSAGES = HANDLE_R_ERROR_MESSAGES + HANDLE_RW_ERROR_MESSAGES
