@@ -61,7 +61,8 @@ module Activerecord::Mysql::Reconnect
     'The MySQL server is running with the --read-only option',
     'Unknown MySQL server host', # For DNS blips
     'Communications link failure',
-    'Lost connection to MySQL server at'
+    'Lost connection to MySQL server at',
+    'SSL connection error' # RDS Proxy blips
   ]
 
   HANDLE_ERROR_MESSAGES = HANDLE_R_ERROR_MESSAGES + HANDLE_RW_ERROR_MESSAGES
