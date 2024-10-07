@@ -62,7 +62,8 @@ module Activerecord::Mysql::Reconnect
     'Unknown MySQL server host', # For DNS blips
     'Communications link failure',
     'Lost connection to MySQL server at',
-    'SSL connection error' # RDS Proxy blips
+    'SSL connection error', # RDS Proxy blips
+    'The last transaction was aborted due to Zero Downtime Restart' # Aurora node restarts
   ]
 
   HANDLE_ERROR_MESSAGES = HANDLE_R_ERROR_MESSAGES + HANDLE_RW_ERROR_MESSAGES
